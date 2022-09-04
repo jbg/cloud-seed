@@ -1,0 +1,31 @@
+use hyper::header::{HeaderName, HeaderValue};
+use serde::Deserialize;
+
+use crate::source::helpers::{check_dmi_id, http_get};
+
+pub struct VultrSource;
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+struct Metadata {
+  user_data: Option<String>,
+}
+
+#[async_trait::async_trait]
+impl super::Source for VultrSource {
+  async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
+    if !check_dmi_id("bios_vendor", b"Vultr").await? {
+      return Ok(None);
+    }
+
+    let headers = [(
+      HeaderName::from_static("metadata-token"),
+      HeaderValue::from_static("cloudinit"),
+    )]
+    .into_iter()
+    .collect();
+    let body = http_get("http://169.254.169.254/v1.json", Some(headers)).await?;
+    let metadata: Metadata = serde_json::from_str(&body)?;
+    Ok(metadata.user_data)
+  }
+}

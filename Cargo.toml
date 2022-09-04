@@ -1,0 +1,38 @@
+[package]
+name = "cloud-seed"
+version = "0.1.0"
+authors = ["Jasper Hugo <jasper@jasperhugo.com>"]
+edition = "2021"
+description = "Fetch user-data from a cloud provider and write files described within to the filesystem"
+repository = "https://github.com/jbg/cloud-seed"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+anyhow = { version = "1", default-features = false, features = ["std"] }
+async-trait = { version = "0.1", default-features = false }
+aws-config = { optional = true, version = "0.48", default-features = false }
+base64 = { version = "0.13", default-features = false, features = ["std"] }
+futures-util = { version = "0.3", default-features = false, features = ["std"] }
+hyper = { optional = true, version = "0.14", default-features = false, features = ["client", "http1", "tcp"] }
+nix = { version = "0.25", default-features = false, features = ["fs", "user"] }
+once_cell = { version = "1", default-features = false, features = ["std"] }
+serde = { version = "1", default-features = false, features = ["derive", "std"] }
+serde_json = { version = "1", default-features = false, features = ["std"] }
+tokio = { version = "1", default-features = false, features = ["fs", "io-util", "macros", "rt-multi-thread"] }
+
+[features]
+default = [
+  "source-alibaba",
+  "source-amazon",
+  "source-exoscale",
+  "source-gcorelabs",
+  "source-google",
+  "source-vultr",
+]
+helper-http = ["hyper"]
+source-alibaba = ["helper-http"]
+source-amazon = ["aws-config"]
+source-exoscale = ["helper-http"]
+source-gcorelabs = ["helper-http"]
+source-google = ["helper-http"]
+source-vultr = ["helper-http"]
