@@ -22,14 +22,14 @@ The user data should contain `#cloud-seed` followed by a newline and then a JSON
 }
 ```
 
-| Field | Default | Description |
-| --- | --- | --- |
-| `path` | No default (required) | The absolute or relative path to the file to be written. Parent directories are created as needed. Relative paths are interpreted relative to **cloud-seed**'s working directory. |
-| `content` | `""` (no content) | The content to be written, encoded according to the `encoding` key. |
-| `encoding` | `plain` | The encoding of the `content` value. Can be `plain` or `base64`. |
-| `owner` | The user running **cloud-seed** | The user and group that should own the file, in the format `user:group`. |
-| `permissions` | `0644` | The permissions (mode) that the written file should have, specified as an octal string. |
-| `append` | `false` | Whether to append to the file if it already exists. If `false`, the file will be truncated before the content is written. |
+| Field | Description |
+| --- | --- |
+| `path` | Required. The path to the file to be written. Parent directories are created as needed. Relative paths are interpreted relative to **cloud-seed**'s working directory. |
+| `content` | The content to be written, encoded according to the `encoding` key. Defaults to no content. |
+| `encoding` | The encoding of the `content` value. Can be `plain` (the default) or `base64`. |
+| `owner` | The user and group that should own the file, in the format `user:group`. Defaults to the user that is running **cloud-seed** and their primary group. |
+| `permissions` | The permissions (mode) that the written file should have, specified as an octal string. Defaults to `0644`. |
+| `append` | If `true`, the `content` will be appended to the file if it already exists. If `false` (the default), the file will be truncated before the content is written. |
 
 ## Supported data sources
 
@@ -46,7 +46,7 @@ Which cloud **cloud-seed** is running in is detected automatically via DMI data.
 
 ## Compatibility with cloud-init
 
-For compatibility with `cloud-init`, YAML is supported, the `#cloud-config` shebang is accepted, and `write_files` is accepted as an alias for `files`. All other `cloud-init` directives are ignored. If `cloud-init` compatibility is not required, it is recommended to use **cloud-seed**'s JSON format described above.
+For compatibility with **cloud-init**, YAML is supported, the `#cloud-config` shebang is accepted, and `write_files` is accepted as an alias for `files`. All other **cloud-init** directives are ignored. If **cloud-init** compatibility is not required, it is recommended to use **cloud-seed**'s JSON format described above.
 
 ## License
 
