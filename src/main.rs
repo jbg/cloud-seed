@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
     if let Some(user_data) = source.try_fetch().await? {
       if let Some((shebang, content)) = user_data.split_once('\n') {
         if ALLOWED_SHEBANGS.contains(&shebang.trim()) {
-          let user_data = serde_json::from_str(content)?;
+          let user_data = serde_yaml::from_str(content)?;
           return execute_user_data(user_data).await;
         }
         else {
