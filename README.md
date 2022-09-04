@@ -4,17 +4,17 @@
 
 ## User data format
 
-The user data should contain `#cloud-seed` followed by a newline and then a JSON object. The only key currently defined is `files`, which should contain an array of zero or more file objects, with the structure shown below.
+The user data should contain `#cloud-seed` followed by a newline and then a JSON object. The only key currently defined is `files`, which should contain an array of zero or more file objects. For example:
 
 ```json
 #cloud-seed
 {
   "files": [
     {
-      "path": "/path/to/file/to/be/written",
-      "content": "content of file, encoded according to `encoding` key",
-      "encoding": "plain (default) or base64",
-      "owner": "user:group",
+      "path": "/etc/foobar/foobar.conf",
+      "content": "Zm9vYmFyCg==",
+      "encoding": "base64",
+      "owner": "root:root",
       "permissions": "0644",
       "append": false
     }
@@ -22,15 +22,14 @@ The user data should contain `#cloud-seed` followed by a newline and then a JSON
 }
 ```
 
-The only required key in the file objects is `path`, which can be absolute or relative. Relative paths are intepreted relative to **cloud-seed**'s working directory
-
-`content` defaults to an empty string.
-
-`owner` defaults to the user running cloud-seed and their primary group, so will usually default to `root:root` (but see **Running as non-root** below).
-
-`permissions` should be specified as an octal string and defaults to `0644`.
-
-If `append` is `true`, the file will be appended to if it already exists, otherwise it will be truncated before the content is written.
+| Field | Default | Description |
+| --- | --- | --- |
+| `path` | No default (required) | The absolute or relative path to the file to be written. Parent directories are created as needed. Relative paths are interpreted relative to **cloud-seed**'s working directory. |
+| `content` | `""` (no content) | The content to be written, encoded according to the `encoding` key. |
+| `encoding` | `plain` | The encoding of the `content` value. Can be `plain` or `base64`. |
+| `owner` | The user running **cloud-seed** | The user and group that should own the file, in the format `user:group`. |
+| `permissions` | `0644` | The permissions (mode) that the written file should have, specified as an octal string. |
+| `append` | `false` | Whether to append to the file if it already exists. If `false`, the file will be truncated before the content is written. |
 
 ## Supported data sources
 
@@ -45,13 +44,9 @@ If `append` is `true`, the file will be appended to if it already exists, otherw
 
 Which cloud **cloud-seed** is running in is detected automatically via DMI data.
 
-## Running as non-root
-
-**cloud-seed** can run as a non-root user. In this case, files can only be written at paths that this user has permission to write to. `owner` defaults to the user `cloud-seed` is running as.
-
 ## Compatibility with cloud-init
 
-For compatibility with `cloud-init`, YAML is supported, the `#cloud-config` shebang is accepted, and `write_files` is accepted as an alias for `files`. All other `cloud-init` directives are ignored. If `cloud-init` compatibility is not required, it is recommended to use the `cloud-seed` JSON format described above.
+For compatibility with `cloud-init`, YAML is supported, the `#cloud-config` shebang is accepted, and `write_files` is accepted as an alias for `files`. All other `cloud-init` directives are ignored. If `cloud-init` compatibility is not required, it is recommended to use **cloud-seed**'s JSON format described above.
 
 ## License
 
