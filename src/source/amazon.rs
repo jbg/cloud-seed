@@ -1,4 +1,4 @@
-use crate::source::helpers::check_dmi_id;
+use crate::source::helpers::get_dmi_id;
 
 #[derive(Debug, Clone, Copy)]
 pub struct AmazonSource;
@@ -6,7 +6,7 @@ pub struct AmazonSource;
 #[async_trait::async_trait]
 impl super::Source for AmazonSource {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
-    if !check_dmi_id("bios_vendor", "Amazon EC2").await? {
+    if get_dmi_id("bios_vendor").await?.as_deref() != Some("Amazon EC2") {
       return Ok(None);
     }
 

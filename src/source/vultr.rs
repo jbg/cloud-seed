@@ -1,7 +1,7 @@
 use hyper::header::{HeaderName, HeaderValue};
 use serde::Deserialize;
 
-use crate::source::helpers::{check_dmi_id, http_get};
+use crate::source::helpers::{get_dmi_id, http_get};
 
 #[derive(Debug, Clone, Copy)]
 pub struct VultrSource;
@@ -15,7 +15,7 @@ struct Metadata {
 #[async_trait::async_trait]
 impl super::Source for VultrSource {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
-    if !check_dmi_id("bios_vendor", "Vultr").await? {
+    if get_dmi_id("bios_vendor").await?.as_deref() != Some("Vultr") {
       return Ok(None);
     }
 

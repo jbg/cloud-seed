@@ -2,10 +2,10 @@ use anyhow::Result;
 use tokio::{fs, io::ErrorKind};
 
 #[tracing::instrument(level = "debug")]
-pub async fn check_dmi_id(key: &str, expected_value: &str) -> Result<bool> {
+pub async fn get_dmi_id(key: &str) -> Result<Option<String>> {
   match fs::read_to_string(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
-    Ok(value) => Ok(value.trim() == expected_value),
-    Err(e) if e.kind() == ErrorKind::NotFound => Ok(false),
+    Ok(value) => Ok(Some(value.trim().into())),
+    Err(e) if e.kind() == ErrorKind::NotFound => Ok(None),
     Err(e) => Err(e.into()),
   }
 }

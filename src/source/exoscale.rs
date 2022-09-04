@@ -1,4 +1,4 @@
-use crate::source::helpers::{check_dmi_id, http_get};
+use crate::source::helpers::{get_dmi_id, http_get};
 
 #[derive(Debug, Clone, Copy)]
 pub struct ExoscaleSource;
@@ -6,7 +6,7 @@ pub struct ExoscaleSource;
 #[async_trait::async_trait]
 impl super::Source for ExoscaleSource {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
-    if !check_dmi_id("product_name", "Exoscale Compute Platform").await? {
+    if get_dmi_id("product_name").await?.as_deref() != Some("Exoscale Compute Platform") {
       return Ok(None);
     }
 
