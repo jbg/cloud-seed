@@ -10,7 +10,7 @@ license = "MIT OR Apache-2.0"
 [dependencies]
 anyhow = { version = "1", default-features = false, features = ["std"] }
 async-trait = { version = "0.1", default-features = false }
-aws-config = { optional = true, version = "0.48", default-features = false }
+aws-config = { optional = true, version = "0.48", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
 base64 = { version = "0.13", default-features = false, features = ["std"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 hyper = { optional = true, version = "0.14", default-features = false, features = ["client", "http1", "tcp"] }
