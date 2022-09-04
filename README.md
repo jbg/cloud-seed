@@ -28,12 +28,10 @@ The only key currently defined for the JSON object is `files`, which is an array
 | --- | --- |
 | `path` | Required. The path to the file to be written. Parent directories are created as needed. Relative paths are interpreted relative to **cloud-seed**'s working directory. |
 | `content` | The content to be written, encoded according to the `encoding` key. Defaults to no content. |
-| `encoding` | The encoding of the `content` value. Can be `plain` (the default), `base64` or `base64gzip`. |
+| `encoding` | The encoding of the `content` value. Can be `plain` (the default), `base64` or `base64gzip`. Rather than using the `base64gzip` encoding, consider compressing the entire user data with gzip. |
 | `owner` | The user and group that should own the file, in the format `user:group`. Defaults to the user that is running **cloud-seed** and their primary group. |
 | `permissions` | The mode that files should be created with, specified as an octal string. Defaults to `0644`. If the file already exists, **cloud-seed** will not change its mode. |
 | `append` | If `true`, the `content` will be appended to the file if it already exists. If `false` (the default), the file will be truncated before the content is written. |
-
-
 
 ## Supported data sources
 
