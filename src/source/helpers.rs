@@ -1,20 +1,10 @@
 use anyhow::Result;
-use tokio::{
-  fs::File,
-  io::{AsyncReadExt as _, ErrorKind},
-};
+use tokio::{fs, io::ErrorKind};
 
 #[tracing::instrument(level = "debug")]
-pub async fn check_dmi_id<const L: usize>(key: &str, expected_value: &[u8; L]) -> Result<bool> {
-  match File::open(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
-    Ok(mut file) => {
-      let mut buf = [0u8; L];
-      match file.read_exact(&mut buf).await {
-        Ok(_) => Ok(&buf == expected_value),
-        Err(e) if e.kind() == ErrorKind::UnexpectedEof => Ok(false),
-        Err(e) => Err(e.into()),
-      }
-    },
+pub async fn check_dmi_id(key: &str, expected_value: &str) -> Result<bool> {
+  match fs::read_to_string(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
+    Ok(value) => Ok(value.trim() == expected_value),
     Err(e) if e.kind() == ErrorKind::NotFound => Ok(false),
     Err(e) => Err(e.into()),
   }

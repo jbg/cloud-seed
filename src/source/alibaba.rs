@@ -6,7 +6,7 @@ pub struct AlibabaSource;
 #[async_trait::async_trait]
 impl super::Source for AlibabaSource {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
-    if !check_dmi_id("product_name", b"Alibaba Cloud ECS").await? {
+    if !check_dmi_id("product_name", "Alibaba Cloud ECS").await? {
       return Ok(None);
     }
 

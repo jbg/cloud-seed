@@ -7,7 +7,7 @@ pub struct GcorelabsSource;
 impl super::Source for GcorelabsSource {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
     // TODO DMI string is untested
-    if !check_dmi_id("product_name", b"GCore Labs").await? {
+    if !check_dmi_id("product_name", "GCore Labs").await? {
       return Ok(None);
     }
 

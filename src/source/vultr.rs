@@ -15,7 +15,7 @@ struct Metadata {
 #[async_trait::async_trait]
 impl super::Source for VultrSource {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
-    if !check_dmi_id("bios_vendor", b"Vultr").await? {
+    if !check_dmi_id("bios_vendor", "Vultr").await? {
       return Ok(None);
     }
 
