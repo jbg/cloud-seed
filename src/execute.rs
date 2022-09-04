@@ -2,10 +2,7 @@ use anyhow::{Context, Result};
 use async_compression::tokio::write::GzipDecoder;
 use futures_util::stream::{self, StreamExt as _, TryStreamExt as _};
 use nix::unistd::{chown, Group, User};
-use tokio::{
-  fs,
-  io::{AsyncWriteExt as _, BufWriter},
-};
+use tokio::{fs, io::AsyncWriteExt as _};
 
 use crate::schema::{Encoding, UserData};
 
@@ -18,17 +15,15 @@ pub async fn execute_user_data(user_data: UserData<'_>) -> Result<()> {
         fs::create_dir_all(parent).await?;
       }
 
-      let mut writer = BufWriter::new(
-        fs::OpenOptions::new()
-          .create(true)
-          .truncate(!file.append)
-          .append(file.append)
-          .mode(u32::from_str_radix(&file.permissions, 8)?)
-          .write(true)
-          .read(false)
-          .open(&file.path)
-          .await?,
-      );
+      let mut writer = fs::OpenOptions::new()
+        .create(true)
+        .truncate(!file.append)
+        .append(file.append)
+        .mode(u32::from_str_radix(&file.permissions, 8)?)
+        .write(true)
+        .read(false)
+        .open(&file.path)
+        .await?;
 
       if let Some(owner) = file.owner {
         if let Some((user, group)) = owner.split_once(':') {
@@ -48,8 +43,12 @@ pub async fn execute_user_data(user_data: UserData<'_>) -> Result<()> {
           let decoded = base64::decode(file.content.as_ref())?;
           let mut decompresser = GzipDecoder::new(writer);
           decompresser.write_all(&decoded).await?;
+          decompresser.flush().await?;
+          writer = decompresser.into_inner();
         },
       }
+
+      writer.flush().await?;
 
       Ok(())
     })
