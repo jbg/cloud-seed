@@ -4,6 +4,7 @@ use tokio::{
   io::{AsyncReadExt as _, ErrorKind},
 };
 
+#[tracing::instrument(level = "debug")]
 pub async fn check_dmi_id<const L: usize>(key: &str, expected_value: &[u8; L]) -> Result<bool> {
   match File::open(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
     Ok(mut file) => {
@@ -17,6 +18,7 @@ pub async fn check_dmi_id<const L: usize>(key: &str, expected_value: &[u8; L]) -
 }
 
 #[cfg(feature = "helper-http")]
+#[tracing::instrument(level = "debug")]
 pub async fn http_get(
   url: &str,
   maybe_headers: Option<hyper::HeaderMap<hyper::header::HeaderValue>>,
@@ -26,7 +28,7 @@ pub async fn http_get(
 
   static CLIENT: Lazy<Client<hyper::client::HttpConnector>> = Lazy::new(Client::new);
 
-  let mut builder = hyper::Request::get(url);
+  let mut builder = hyper::Request::get(url).header("user-agent", "cloud-seed");
   if let Some(headers) = maybe_headers {
     *builder.headers_mut().unwrap() = headers;
   }

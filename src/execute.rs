@@ -8,6 +8,7 @@ use tokio::{
 
 use crate::schema::{Encoding, UserData};
 
+#[tracing::instrument(level = "debug")]
 pub async fn execute_user_data(user_data: UserData<'_>) -> Result<()> {
   stream::iter(user_data.files)
     .map(Ok::<_, anyhow::Error>)

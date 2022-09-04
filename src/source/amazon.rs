@@ -1,5 +1,6 @@
 use crate::source::helpers::check_dmi_id;
 
+#[derive(Debug, Clone, Copy)]
 pub struct AmazonSource;
 
 #[async_trait::async_trait]

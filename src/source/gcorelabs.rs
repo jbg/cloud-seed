@@ -1,5 +1,6 @@
 use crate::source::helpers::{check_dmi_id, http_get};
 
+#[derive(Debug, Clone, Copy)]
 pub struct GcorelabsSource;
 
 #[async_trait::async_trait]

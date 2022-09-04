@@ -14,6 +14,6 @@ pub mod google;
 pub mod vultr;
 
 #[async_trait::async_trait]
-pub trait Source {
+pub trait Source: std::fmt::Debug {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>>;
 }

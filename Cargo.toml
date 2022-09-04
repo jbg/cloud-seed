@@ -20,6 +20,9 @@ serde = { version = "1", default-features = false, features = ["derive", "std"] 
 serde_json = { version = "1", default-features = false, features = ["std"] }
 serde_yaml = { version = "0.9", default-features = false }
 tokio = { version = "1", default-features = false, features = ["fs", "io-util", "macros", "rt-multi-thread"] }
+tracing = { version = "0.1", default-features = false, features = ["std"] }
+tracing-futures = { version = "0.2", default-features = false, features = ["std", "tokio", "std-future"] }
+tracing-subscriber = { version = "0.3", default-features = false, features = ["std", "env-filter", "fmt", "ansi", "registry", "smallvec", "tracing-log"] }
 
 [features]
 default = [
