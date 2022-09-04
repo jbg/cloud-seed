@@ -9,17 +9,19 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 anyhow = { version = "1", default-features = false, features = ["std"] }
+async-compression = { version = "0.3", default-features = false, features = ["tokio", "gzip"]}
 async-trait = { version = "0.1", default-features = false }
 aws-config = { optional = true, version = "0.48", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
 base64 = { version = "0.13", default-features = false, features = ["std"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
-hyper = { optional = true, version = "0.14", default-features = false, features = ["client", "http1", "tcp"] }
+hyper = { optional = true, version = "0.14", default-features = false, features = ["client", "http1", "tcp", "stream"] }
 nix = { version = "0.25", default-features = false, features = ["fs", "user"] }
 once_cell = { version = "1", default-features = false, features = ["std"] }
 serde = { version = "1", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1", default-features = false, features = ["std"] }
 serde_yaml = { version = "0.9", default-features = false }
 tokio = { version = "1", default-features = false, features = ["fs", "io-util", "macros", "rt-multi-thread"] }
+tokio-util = { version = "0.7", default-features = false, features = ["io"] }
 tracing = { version = "0.1", default-features = false, features = ["std"] }
 tracing-futures = { version = "0.2", default-features = false, features = ["std", "tokio", "std-future"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = ["std", "env-filter", "fmt", "ansi", "registry", "smallvec", "tracing-log"] }

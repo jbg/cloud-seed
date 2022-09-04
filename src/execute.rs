@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use async_compression::tokio::write::GzipDecoder;
 use futures_util::stream::{self, StreamExt as _, TryStreamExt as _};
 use nix::unistd::{chown, Group, User};
 use tokio::{
@@ -42,6 +43,11 @@ pub async fn execute_user_data(user_data: UserData<'_>) -> Result<()> {
         Encoding::Base64 => {
           let decoded = base64::decode(file.content.as_ref())?;
           writer.write_all(&decoded).await?;
+        },
+        Encoding::Base64Gzip => {
+          let decoded = base64::decode(file.content.as_ref())?;
+          let mut decompresser = GzipDecoder::new(writer);
+          decompresser.write_all(&decoded).await?;
         },
       }
 

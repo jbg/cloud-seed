@@ -36,4 +36,9 @@ pub enum Encoding {
   Plain,
   #[serde(alias = "b64")]
   Base64,
+  #[serde(alias = "gz+base64")]
+  #[serde(alias = "gzip+base64")]
+  #[serde(alias = "gz+b64")]
+  #[serde(alias = "gzip+b64")]
+  Base64Gzip,
 }
