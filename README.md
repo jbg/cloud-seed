@@ -28,7 +28,7 @@ The user data should contain `#cloud-seed` followed by a newline and then a JSON
 | `content` | The content to be written, encoded according to the `encoding` key. Defaults to no content. |
 | `encoding` | The encoding of the `content` value. Can be `plain` (the default) or `base64`. |
 | `owner` | The user and group that should own the file, in the format `user:group`. Defaults to the user that is running **cloud-seed** and their primary group. |
-| `permissions` | The permissions (mode) that the written file should have, specified as an octal string. Defaults to `0644`. |
+| `permissions` | The mode that files should be created with, specified as an octal string. Defaults to `0644`. If the file already exists, **cloud-seed** will not change its mode. |
 | `append` | If `true`, the `content` will be appended to the file if it already exists. If `false` (the default), the file will be truncated before the content is written. |
 
 ## Supported data sources
