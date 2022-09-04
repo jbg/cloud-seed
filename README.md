@@ -40,8 +40,8 @@ The only key currently defined for the JSON object is `files`, which is an array
 * Alibaba Cloud
 * AWS
 * Exoscale
-* GCore Labs (untested)
 * Google Cloud
+* OpenStack
 * Vultr
 
 Which cloud **cloud-seed** is running in is detected automatically via DMI data.

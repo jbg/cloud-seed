@@ -31,14 +31,14 @@ default = [
   "source-alibaba",
   "source-amazon",
   "source-exoscale",
-  "source-gcorelabs",
   "source-google",
+  "source-openstack",
   "source-vultr",
 ]
 helper-http = ["hyper"]
 source-alibaba = ["helper-http"]
 source-amazon = ["aws-config"]
 source-exoscale = ["helper-http"]
-source-gcorelabs = ["helper-http"]
 source-google = ["helper-http"]
+source-openstack = ["helper-http"]
 source-vultr = ["helper-http"]

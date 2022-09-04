@@ -15,10 +15,10 @@ const SOURCES: &[&dyn Source] = &[
   &source::amazon::AmazonSource,
   #[cfg(feature = "source-exoscale")]
   &source::exoscale::ExoscaleSource,
-  #[cfg(feature = "source-gcorelabs")]
-  &source::gcorelabs::GcorelabsSource,
   #[cfg(feature = "source-google")]
   &source::google::GoogleSource,
+  #[cfg(feature = "source-openstack")]
+  &source::openstack::OpenstackSource,
   #[cfg(feature = "source-vultr")]
   &source::vultr::VultrSource,
 ];

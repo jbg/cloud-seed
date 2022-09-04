@@ -6,10 +6,10 @@ pub mod alibaba;
 pub mod amazon;
 #[cfg(feature = "source-exoscale")]
 pub mod exoscale;
-#[cfg(feature = "source-gcorelabs")]
-pub mod gcorelabs;
 #[cfg(feature = "source-google")]
 pub mod google;
+#[cfg(feature = "source-openstack")]
+pub mod openstack;
 #[cfg(feature = "source-vultr")]
 pub mod vultr;
 
