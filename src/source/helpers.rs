@@ -9,8 +9,11 @@ pub async fn check_dmi_id<const L: usize>(key: &str, expected_value: &[u8; L]) -
   match File::open(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
     Ok(mut file) => {
       let mut buf = [0u8; L];
-      file.read_exact(&mut buf).await?;
-      Ok(&buf == expected_value)
+      match file.read_exact(&mut buf).await {
+        Ok(_) => Ok(&buf == expected_value),
+        Err(e) if e.kind() == ErrorKind::UnexpectedEof => Ok(false),
+        Err(e) => Err(e.into()),
+      }
     },
     Err(e) if e.kind() == ErrorKind::NotFound => Ok(false),
     Err(e) => Err(e.into()),
