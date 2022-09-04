@@ -1,4 +1,5 @@
 use anyhow::bail;
+use hyper::header::{HeaderName, HeaderValue};
 use serde::Deserialize;
 
 use crate::source::helpers::{get_dmi_id, http_get};
@@ -26,9 +27,15 @@ impl super::Source for GoogleSource {
       return Ok(None);
     }
 
+    let headers = [(
+      HeaderName::from_static("metadata-flavor"),
+      HeaderValue::from_static("Google"),
+    )]
+    .into_iter()
+    .collect();
     let body = http_get(
       "http://metadata.google.internal/computeMetadata/v1/instance/attributes",
-      None,
+      Some(headers),
     )
     .await?;
     let instance_attributes: InstanceAttributes = serde_json::from_str(&body)?;
