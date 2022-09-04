@@ -22,7 +22,7 @@ enum UserDataEncoding {
 #[async_trait::async_trait]
 impl super::Source for GoogleSource {
   async fn try_fetch(&self) -> anyhow::Result<Option<String>> {
-    if get_dmi_id("bios_vendor").await?.as_deref() != Some("Google Compute Engine") {
+    if get_dmi_id("product_name").await?.as_deref() != Some("Google Compute Engine") {
       return Ok(None);
     }
 
