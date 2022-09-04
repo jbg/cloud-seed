@@ -3,9 +3,8 @@ Description=cloud-seed
 Requires=network-online.target
 After=network-online.target
 
-# If cloud-seed fails, try again every 5 seconds for 30 seconds, then reboot the system.
+# If cloud-seed fails, try again every 5 seconds for 30 seconds. If it still fails, reboot the system.
 # If your use of cloud-seed is not critical to system operation, you may consider changing the OnFailure setting.
-Restart=on-failure
 StartLimitBurst=6
 StartLimitIntervalSec=5
 OnFailure=reboot
@@ -13,6 +12,7 @@ OnFailure=reboot
 [Service]
 Type=oneshot
 RemainAfterExit=true
+Restart=on-failure
 
 ExecStart=/usr/bin/cloud-seed
 Environment=RUST_LOG=debug
