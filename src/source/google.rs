@@ -1,18 +1,11 @@
-use anyhow::bail;
-use hyper::header::{HeaderName, HeaderValue};
+use anyhow::Context;
+use hyper::header::{HeaderMap, HeaderName, HeaderValue};
 use serde::Deserialize;
 
 use crate::source::helpers::{get_dmi_id, http_get};
 
 #[derive(Debug, Clone, Copy)]
 pub struct GoogleSource;
-
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "kebab-case")]
-struct InstanceAttributes {
-  user_data: Option<String>,
-  user_data_encoding: Option<UserDataEncoding>,
-}
 
 #[derive(Deserialize, Debug, Clone, Copy, PartialEq)]
 #[serde(rename_all = "lowercase")]
@@ -27,26 +20,31 @@ impl super::Source for GoogleSource {
       return Ok(None);
     }
 
-    let headers = [(
+    let headers: HeaderMap = [(
       HeaderName::from_static("metadata-flavor"),
       HeaderValue::from_static("Google"),
     )]
     .into_iter()
     .collect();
-    let body = http_get(
-      "http://metadata.google.internal/computeMetadata/v1/instance/attributes",
-      Some(headers),
+
+    let encoding = http_get(
+      "http://metadata.google.internal/computeMetadata/v1/instance/attributes/user-data-encoding",
+      Some(headers.clone()),
     )
     .await?;
-    let instance_attributes: InstanceAttributes = serde_json::from_str(&body)?;
-    if let Some(mut user_data) = instance_attributes.user_data {
-      if instance_attributes.user_data_encoding == Some(UserDataEncoding::Base64) {
-        user_data = String::from_utf8(base64::decode(user_data.as_bytes())?)?;
-      }
-      Ok(Some(user_data))
+    let encoding: Option<UserDataEncoding> = encoding
+      .map(|body| serde_json::from_str(&body))
+      .transpose()?;
+
+    let mut user_data = http_get(
+      "http://metadata.google.internal/computeMetadata/v1/instance/attributes/user-data",
+      Some(headers),
+    )
+    .await?
+    .context("no user data")?;
+    if encoding == Some(UserDataEncoding::Base64) {
+      user_data = String::from_utf8(base64::decode(&user_data)?)?;
     }
-    else {
-      bail!("No user data in instance attributes");
-    }
+    Ok(Some(user_data))
   }
 }

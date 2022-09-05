@@ -1,3 +1,5 @@
+use anyhow::Context;
+
 use crate::source::helpers::{get_dmi_id, http_get};
 
 #[derive(Debug, Clone, Copy)]
@@ -11,7 +13,9 @@ impl super::Source for ExoscaleSource {
     }
 
     Ok(Some(
-      http_get("http://169.254.169.254/latest/user-data", None).await?,
+      http_get("http://169.254.169.254/latest/user-data", None)
+        .await?
+        .context("no user data")?,
     ))
   }
 }

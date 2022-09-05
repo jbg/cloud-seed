@@ -4,6 +4,7 @@ use futures_util::{
   pin_mut,
   stream::{StreamExt, TryStreamExt},
 };
+use hyper::StatusCode;
 use tokio::{
   fs,
   io::{self, AsyncReadExt as _},
@@ -24,7 +25,7 @@ pub async fn get_dmi_id(key: &str) -> Result<Option<String>> {
 pub async fn http_get(
   url: &str,
   maybe_headers: Option<hyper::HeaderMap<hyper::header::HeaderValue>>,
-) -> Result<String> {
+) -> Result<Option<String>> {
   use hyper::Client;
   use once_cell::sync::Lazy;
 
@@ -36,8 +37,9 @@ pub async fn http_get(
   }
 
   let response = CLIENT.request(builder.body(hyper::Body::empty())?).await?;
+  let status = response.status();
 
-  if response.status().is_success() {
+  if status.is_success() {
     let body_chunks_stream = response
       .into_body()
       .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
@@ -64,9 +66,12 @@ pub async fn http_get(
     else {
       body_reader.read_to_string(&mut s).await?;
     }
-    Ok(s)
+    Ok(Some(s))
+  }
+  else if status == StatusCode::NOT_FOUND {
+    Ok(None)
   }
   else {
-    anyhow::bail!("HTTP {}", response.status());
+    Err(anyhow!("HTTP {}", status))
   }
 }

@@ -1,3 +1,4 @@
+use anyhow::Context;
 use hyper::header::{HeaderName, HeaderValue};
 use serde::Deserialize;
 
@@ -25,7 +26,9 @@ impl super::Source for VultrSource {
     )]
     .into_iter()
     .collect();
-    let body = http_get("http://169.254.169.254/v1.json", Some(headers)).await?;
+    let body = http_get("http://169.254.169.254/v1.json", Some(headers))
+      .await?
+      .context("no user data")?;
     let metadata: Metadata = serde_json::from_str(&body)?;
     Ok(metadata.user_data)
   }
