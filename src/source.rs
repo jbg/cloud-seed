@@ -10,6 +10,8 @@ pub mod exoscale;
 pub mod google;
 #[cfg(feature = "source-openstack")]
 pub mod openstack;
+#[cfg(feature = "source-oracle")]
+pub mod oracle;
 #[cfg(feature = "source-vultr")]
 pub mod vultr;
 

@@ -1,19 +1,9 @@
-use anyhow::{anyhow, Context, Result};
-use async_compression::tokio::bufread::GzipDecoder;
-use futures_util::{
-  pin_mut,
-  stream::{StreamExt, TryStreamExt},
-};
-use hyper::StatusCode;
-use tokio::{
-  fs,
-  io::{self, AsyncReadExt as _},
-};
-use tokio_util::io::StreamReader;
+use anyhow::Result;
+use tokio::io;
 
 #[tracing::instrument(level = "debug")]
 pub async fn get_dmi_id(key: &str) -> Result<Option<String>> {
-  match fs::read_to_string(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
+  match tokio::fs::read_to_string(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
     Ok(value) => Ok(Some(value.trim().into())),
     Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(None),
     Err(e) => Err(e.into()),
@@ -26,8 +16,16 @@ pub async fn http_get(
   url: &str,
   maybe_headers: Option<hyper::HeaderMap<hyper::header::HeaderValue>>,
 ) -> Result<Option<String>> {
-  use hyper::Client;
+  use anyhow::{anyhow, Context};
+  use async_compression::tokio::bufread::GzipDecoder;
+  use futures_util::{
+    pin_mut,
+    stream::{StreamExt, TryStreamExt},
+  };
+  use hyper::{Client, StatusCode};
   use once_cell::sync::Lazy;
+  use tokio::io::AsyncReadExt as _;
+  use tokio_util::io::StreamReader;
 
   static CLIENT: Lazy<Client<hyper::client::HttpConnector>> = Lazy::new(Client::new);
 

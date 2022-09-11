@@ -19,6 +19,8 @@ const SOURCES: &[&dyn Source] = &[
   &source::google::GoogleSource,
   #[cfg(feature = "source-openstack")]
   &source::openstack::OpenstackSource,
+  #[cfg(feature = "source-oracle")]
+  &source::oracle::OracleSource,
   #[cfg(feature = "source-vultr")]
   &source::vultr::VultrSource,
 ];

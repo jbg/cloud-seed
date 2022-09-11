@@ -22,7 +22,7 @@ serde_json = { version = "1", default-features = false, features = ["std"] }
 serde_yaml = { version = "0.9", default-features = false }
 tokio = { version = "1", default-features = false, features = ["fs", "io-util", "macros", "rt-multi-thread"] }
 tokio-util = { version = "0.7", default-features = false, features = ["io"] }
-tracing = { version = "0.1", default-features = false, features = ["std"] }
+tracing = { version = "0.1", default-features = false, features = ["std", "attributes"] }
 tracing-futures = { version = "0.2", default-features = false, features = ["std", "tokio", "std-future"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = ["std", "env-filter", "fmt", "ansi", "registry", "smallvec", "tracing-log"] }
 
@@ -33,6 +33,7 @@ default = [
   "source-exoscale",
   "source-google",
   "source-openstack",
+  "source-oracle",
   "source-vultr",
 ]
 helper-http = ["hyper"]
@@ -41,4 +42,5 @@ source-amazon = ["aws-config"]
 source-exoscale = ["helper-http"]
 source-google = ["helper-http"]
 source-openstack = ["helper-http"]
+source-oracle = ["helper-http"]
 source-vultr = ["helper-http"]
