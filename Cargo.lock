@@ -399,6 +399,7 @@ dependencies = [
  "async-trait",
  "aws-config",
  "base64",
+ "flate2",
  "futures-util",
  "hyper",
  "nix",

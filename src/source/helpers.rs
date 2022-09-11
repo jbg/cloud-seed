@@ -16,8 +16,11 @@ pub async fn http_get(
   url: &str,
   maybe_headers: Option<hyper::HeaderMap<hyper::header::HeaderValue>>,
 ) -> Result<Option<String>> {
+  use std::io::{Cursor, Read as _};
+
   use anyhow::{anyhow, Context};
   use async_compression::tokio::bufread::GzipDecoder;
+  use flate2::read::GzDecoder;
   use futures_util::{
     pin_mut,
     stream::{StreamExt, TryStreamExt},
@@ -52,17 +55,37 @@ pub async fn http_get(
       .as_ref()
       .map_err(|_| anyhow!("failed to read response"))?;
 
+    #[derive(Clone, Copy)]
+    enum Format {
+      Plain,
+      Gzip,
+      Base64Gzip,
+    }
+
     // Check if the first chunk starts with the gzip magic bytes
-    let is_gzipped = first_chunk[0..2] == [0x1f, 0x8b];
+    let format = match first_chunk[0..3] {
+      [0x1f, 0x8b, _] => Format::Gzip,
+      [b'H', b'4', b's'] => Format::Base64Gzip,
+      _ => Format::Plain,
+    };
 
     let mut body_reader = StreamReader::new(body_chunks_stream);
     let mut s = String::new();
-    if is_gzipped {
-      let mut decoder = GzipDecoder::new(body_reader);
-      decoder.read_to_string(&mut s).await?;
-    }
-    else {
-      body_reader.read_to_string(&mut s).await?;
+    match format {
+      Format::Gzip => {
+        let mut decoder = GzipDecoder::new(body_reader);
+        decoder.read_to_string(&mut s).await?;
+      },
+      Format::Base64Gzip => {
+        body_reader.read_to_string(&mut s).await?;
+        // TODO: consider ways to do this without buffering + blocking
+        let decoded = base64::decode(&s)?;
+        let mut decoder = GzDecoder::new(Cursor::new(decoded));
+        decoder.read_to_string(&mut s)?;
+      },
+      Format::Plain => {
+        body_reader.read_to_string(&mut s).await?;
+      },
     }
     Ok(Some(s))
   }

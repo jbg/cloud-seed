@@ -13,6 +13,7 @@ async-compression = { version = "0.3", default-features = false, features = ["to
 async-trait = { version = "0.1", default-features = false }
 aws-config = { optional = true, version = "0.48", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
 base64 = { version = "0.13", default-features = false, features = ["std"] }
+flate2 = { optional = true, version = "1", default-features = false, features = ["rust_backend"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 hyper = { optional = true, version = "0.14", default-features = false, features = ["client", "http1", "tcp", "stream"] }
 nix = { version = "0.25", default-features = false, features = ["fs", "user"] }
@@ -36,7 +37,7 @@ default = [
   "source-oracle",
   "source-vultr",
 ]
-helper-http = ["hyper"]
+helper-http = ["hyper", "flate2"]
 source-alibaba = ["helper-http"]
 source-amazon = ["aws-config"]
 source-exoscale = ["helper-http"]
