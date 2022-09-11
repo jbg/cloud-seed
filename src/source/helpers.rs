@@ -81,6 +81,7 @@ pub async fn http_get(
         // TODO: consider ways to do this without buffering + blocking
         let decoded = base64::decode(&s)?;
         let mut decoder = GzDecoder::new(Cursor::new(decoded));
+        s.clear();
         decoder.read_to_string(&mut s)?;
       },
       Format::Plain => {
