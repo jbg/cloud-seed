@@ -43,7 +43,8 @@ async fn main() -> Result<()> {
         if ALLOWED_SHEBANGS.contains(&shebang.trim()) {
           let user_data = serde_yaml::from_str(content)?;
           info!("Executing user data from {:?}", source);
-          return execute_user_data(user_data).await;
+          execute_user_data(user_data).await;
+          return Ok(());
         }
         else {
           bail!("Unhandled shebang in user data");

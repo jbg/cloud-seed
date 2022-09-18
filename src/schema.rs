@@ -4,7 +4,9 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Debug)]
 pub struct UserData<'a> {
-  #[serde(borrow, alias = "write_files")]
+  #[serde(default, borrow, alias = "fqdn")]
+  pub hostname: Option<Cow<'a, str>>,
+  #[serde(default, borrow, alias = "write_files")]
   pub files: Vec<File<'a>>,
 }
 

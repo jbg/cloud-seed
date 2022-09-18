@@ -15,6 +15,7 @@ aws-config = { optional = true, version = "0.48", default-features = false, feat
 base64 = { version = "0.13", default-features = false, features = ["std"] }
 flate2 = { optional = true, version = "1", default-features = false, features = ["rust_backend"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
+hostname = { version = "0.3", default-features = false, features = ["set"] }
 hyper = { optional = true, version = "0.14", default-features = false, features = ["client", "http1", "tcp", "stream"] }
 nix = { version = "0.25", default-features = false, features = ["fs", "user"] }
 once_cell = { version = "1", default-features = false, features = ["std"] }
