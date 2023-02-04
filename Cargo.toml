@@ -11,8 +11,8 @@ license = "MIT OR Apache-2.0"
 anyhow = { version = "1", default-features = false, features = ["std"] }
 async-compression = { version = "0.3", default-features = false, features = ["tokio", "gzip"]}
 async-trait = { version = "0.1", default-features = false }
-aws-config = { optional = true, version = "0.52", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
-base64 = { version = "0.20", default-features = false, features = ["std"] }
+aws-config = { optional = true, version = "0.54", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
+base64 = { version = "0.21", default-features = false, features = ["std"] }
 flate2 = { optional = true, version = "1", default-features = false, features = ["rust_backend"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
 hostname = { version = "0.3", default-features = false, features = ["set"] }

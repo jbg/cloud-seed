@@ -1,4 +1,5 @@
 use anyhow::Context;
+use base64::{engine::general_purpose::STANDARD as b64, Engine};
 use hyper::header::{HeaderMap, HeaderName, HeaderValue};
 use serde::Deserialize;
 
@@ -43,7 +44,7 @@ impl super::Source for GoogleSource {
     .await?
     .context("no user data")?;
     if encoding == Some(UserDataEncoding::Base64) {
-      user_data = String::from_utf8(base64::decode(&user_data)?)?;
+      user_data = String::from_utf8(b64.decode(&user_data)?)?;
     }
     Ok(Some(user_data))
   }

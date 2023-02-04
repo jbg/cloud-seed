@@ -20,6 +20,7 @@ pub async fn http_get(
 
   use anyhow::{anyhow, Context};
   use async_compression::tokio::bufread::GzipDecoder;
+  use base64::{engine::general_purpose::STANDARD as b64, Engine};
   use flate2::read::GzDecoder;
   use futures_util::{
     pin_mut,
@@ -79,7 +80,7 @@ pub async fn http_get(
       Format::Base64Gzip => {
         body_reader.read_to_string(&mut s).await?;
         // TODO: consider ways to do this without buffering + blocking
-        let decoded = base64::decode(&s)?;
+        let decoded = b64.decode(&s)?;
         let mut decoder = GzDecoder::new(Cursor::new(decoded));
         s.clear();
         decoder.read_to_string(&mut s)?;
