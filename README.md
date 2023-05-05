@@ -1,12 +1,24 @@
 # cloud-seed
 
+![crates.io](https://img.shields.io/crates/v/cloud-seed.svg)
+
 **cloud-seed** is a very minimal alternative to cloud-init. It can set the hostname and write files based on directives provided in user data.
 
 ## Motivation
 
-Launching a server should be deterministic: launching the same image with the same configuration should have the same result. To that end, server images should include all software and base configuration required for the function of the server. Installing software and performing configuration via scripts on startup introduces opportunities for failure or non-determinism. To update software or fundamentally change the configuration of the server, a new image should be built. The image build process should be automated and frictionless to allow for rapid deployment when necessary.
+Launching a server should be deterministic: launching the same image with the same configuration should have the same result. To that end, server images should include all software and base configuration required for the function of the server.
+
+Installing software and performing configuration via scripts on startup introduces opportunities for failure or non-determinism. To update software or fundamentally change the configuration of the server, a new image should be built. The image build process should be automated and frictionless to allow for rapid deployment when necessary.
 
 cloud-seed exists because it is often necessary to provide some "seed" data to an otherwise-ready-to-run image: some values should not be baked into the image due to them varying from server to server.
+
+## Installation
+
+Installation is currently possible with `cargo`. Pull requests to add packaging scripts are welcomed.
+
+```
+cargo install cloud-seed
+```
 
 ## User data format
 
@@ -33,7 +45,7 @@ For example:
 }
 ```
 
-If `hostname` is set, it will be passed to `sethostname(2)` to set the system hostname when **cloud-seed** runs. For this to work, **cloud-seed** must run as `root` or have the `CAP_SYS_ADMIN` capability.
+If `hostname` is set, it will be passed to `sethostname(2)` to set the system hostname when **cloud-seed** runs.
 
 If `files` is set, each object in the array describes a file that will be written by **cloud-seed**. The supported fields are:
 
@@ -71,6 +83,10 @@ DMI data is used to automatically detect which cloud **cloud-seed** is running i
 For compatibility with **cloud-init**, YAML is supported, the `#cloud-config` shebang is accepted, `fqdn` is accepted as an alias for `hostname`, and `write_files` is accepted as an alias for `files`. The `encoding` field for each file also supports **cloud-init** values `b64`, `gz+base64`, `gzip+base64`, `gz+b64` and `gzip+b64` as aliases for the corresponding **cloud-seed** values.
 
 All other **cloud-init** directives are ignored. If **cloud-init** compatibility is not required, it is recommended to use **cloud-seed**'s JSON format described above.
+
+## Platform support
+
+Linux, Windows, macOS, FreeBSD, Android (21+). Other platforms may work.
 
 ## License
 
