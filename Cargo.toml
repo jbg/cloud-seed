@@ -11,7 +11,7 @@ license = "MIT OR Apache-2.0"
 anyhow = { version = "1", default-features = false, features = ["std"] }
 async-compression = { version = "0.3", default-features = false, features = ["tokio", "gzip"]}
 async-trait = { version = "0.1", default-features = false }
-aws-config = { optional = true, version = "0.54", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
+aws-config = { optional = true, version = "0.55", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
 base64 = { version = "0.21", default-features = false, features = ["std"] }
 flate2 = { optional = true, version = "1", default-features = false, features = ["rust_backend"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
@@ -25,7 +25,6 @@ serde_yaml = { version = "0.9", default-features = false }
 tokio = { version = "1", default-features = false, features = ["fs", "io-util", "macros", "rt-multi-thread"] }
 tokio-util = { version = "0.7", default-features = false, features = ["io"] }
 tracing = { version = "0.1", default-features = false, features = ["std", "attributes"] }
-tracing-futures = { version = "0.2", default-features = false, features = ["std", "tokio", "std-future"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = ["std", "env-filter", "fmt", "ansi", "registry", "smallvec", "tracing-log"] }
 
 [features]
