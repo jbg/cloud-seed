@@ -1,3 +1,5 @@
+use std::iter;
+
 use anyhow::Context;
 use hyper::header::{HeaderName, HeaderValue};
 
@@ -13,11 +15,10 @@ impl super::Source for OracleSource {
       return Ok(None);
     }
 
-    let headers = [(
+    let headers = iter::once((
       HeaderName::from_static("authorization"),
       HeaderValue::from_static("Bearer Oracle"),
-    )]
-    .into_iter()
+    ))
     .collect();
     Ok(Some(
       http_get(

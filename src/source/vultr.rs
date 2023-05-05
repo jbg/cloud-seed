@@ -1,3 +1,5 @@
+use std::iter;
+
 use anyhow::Context;
 use hyper::header::{HeaderName, HeaderValue};
 use serde::Deserialize;
@@ -20,11 +22,10 @@ impl super::Source for VultrSource {
       return Ok(None);
     }
 
-    let headers = [(
+    let headers = iter::once((
       HeaderName::from_static("metadata-token"),
       HeaderValue::from_static("cloudinit"),
-    )]
-    .into_iter()
+    ))
     .collect();
     let body = http_get("http://169.254.169.254/v1.json", Some(headers))
       .await?

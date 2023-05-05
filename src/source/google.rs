@@ -1,3 +1,5 @@
+use std::iter;
+
 use anyhow::Context;
 use base64::{engine::general_purpose::STANDARD as b64, Engine};
 use hyper::header::{HeaderMap, HeaderName, HeaderValue};
@@ -21,11 +23,10 @@ impl super::Source for GoogleSource {
       return Ok(None);
     }
 
-    let headers: HeaderMap = [(
+    let headers: HeaderMap = iter::once((
       HeaderName::from_static("metadata-flavor"),
       HeaderValue::from_static("Google"),
-    )]
-    .into_iter()
+    ))
     .collect();
 
     let encoding = http_get(

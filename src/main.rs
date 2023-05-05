@@ -46,13 +46,11 @@ async fn main() -> Result<()> {
           execute_user_data(user_data).await;
           return Ok(());
         }
-        else {
-          bail!("Unhandled shebang in user data");
-        }
+
+        bail!("Unhandled shebang in user data");
       }
-      else {
-        bail!("Malformed user data");
-      }
+
+      bail!("Malformed user data");
     }
   }
 

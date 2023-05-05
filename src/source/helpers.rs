@@ -3,7 +3,7 @@ use tokio::io;
 
 #[tracing::instrument(level = "debug")]
 pub async fn get_dmi_id(key: &str) -> Result<Option<String>> {
-  match tokio::fs::read_to_string(format!("/sys/devices/virtual/dmi/id/{}", key)).await {
+  match tokio::fs::read_to_string(format!("/sys/devices/virtual/dmi/id/{key}")).await {
     Ok(value) => Ok(Some(value.trim().into())),
     Err(e) if e.kind() == io::ErrorKind::NotFound => Ok(None),
     Err(e) => Err(e.into()),
