@@ -2,11 +2,17 @@
 
 **cloud-seed** is a very minimal alternative to cloud-init. It can set the hostname and write files based on directives provided in user data.
 
+## Motivation
+
+Launching a server should be deterministic: launching the same image with the same configuration should have the same result. To that end, server images should include all software and base configuration required for the function of the server. Installing software and performing configuration via scripts on startup introduces opportunities for failure or non-determinism. To update software or fundamentally change the configuration of the server, a new image should be built. The image build process should be automated and frictionless to allow for rapid deployment when necessary.
+
+cloud-seed exists because it is often necessary to provide some "seed" data to an otherwise-ready-to-run image: some values should not be baked into the image due to them varying from server to server.
+
 ## User data format
 
 The user data consists of `#cloud-seed` followed by a newline and then a JSON object. The entire user data including the `#cloud-seed` header can optionally be compressed with gzip, which is automatically detected.
 
-Two keys are currently defined for the JSON object: `files`, which is an array of file objects, and `hostname`, which is a string. Both are optional.
+Two keys are currently defined for the JSON object: `files`, which is an array of file objects, and `hostname`, which is a string. Both are optional. All other keys are ignored.
 
 For example:
 
@@ -40,6 +46,10 @@ If `files` is set, each object in the array describes a file that will be writte
 | `permissions` | The mode that files should be created with, specified as an octal string. Defaults to `0644`. If the file already exists, **cloud-seed** will not change its mode. |
 | `append` | If `true`, the `content` will be appended to the file if it already exists. If `false` (the default), the file will be truncated before the content is written. |
 
+## Note about sensitive data
+
+The user data on cloud systems is not generally appropriate for the storage of sensitive data, and therefore tools like **cloud-seed** (or cloud-init) should not be used to seed credentials or other sensitive data onto servers. Use functionality such as instance roles and temporary credentials to grant permissions to servers.
+
 ## Supported data sources
 
 **cloud-seed** can currently fetch user data from the metadata servers of:
@@ -51,6 +61,8 @@ If `files` is set, each object in the array describes a file that will be writte
 * OpenStack
 * Oracle Cloud
 * Vultr
+
+Pull requests are welcome to add additional data sources.
 
 DMI data is used to automatically detect which cloud **cloud-seed** is running in.
 
