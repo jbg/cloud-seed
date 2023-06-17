@@ -12,13 +12,17 @@ Installing software and performing configuration via scripts on startup introduc
 
 cloud-seed exists because it is often necessary to provide some "seed" data to an otherwise-ready-to-run image: some values should not be baked into the image due to them varying from server to server.
 
-## Installation
+Existing solutions like cloud-init go far beyond this basic requirement, with the ability to install packages, run scripts, modify network configuration, modify partitioning and more. All of these goals can be achieved in a safer and more repeatable way either during the image build process or through appropriate configuration contained within the image, in combination with values provided via cloud-seed where necessary.
 
-Installation is currently possible with `cargo`. Pull requests to add packaging scripts are welcomed.
+## Building from source
 
 ```
-cargo install cloud-seed
+cargo build --release
+cp target/release/cloud-seed $IMAGE_ROOT/usr/bin/
+cp cloud-seed.service $IMAGE_ROOT/usr/lib/systemd/system/
 ```
+
+Pull requests to add packaging scripts are welcomed.
 
 ## User data format
 
