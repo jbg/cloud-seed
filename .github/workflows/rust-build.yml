@@ -1,0 +1,50 @@
+name: Rust
+on:
+  push:
+    tags:
+    - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - aarch64-unknown-linux-gnu
+          - x86_64-unknown-linux-gnu
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: rustfmt
+        profile: minimal
+        override: true
+        target: ${{ matrix.target }}
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        use-cross: true
+        command: build
+        args: --release --target ${{ matrix.target }}
+    - name: Gzip aritfacts
+      run: gzip -c target/${{ matrix.target }}/release/${{ github.event.repository.name }} > target/${{ github.event.repository.name }}.${{ matrix.target }}.gz
+    - name: Upload aritfacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: |
+          target/${{ github.event.repository.name }}.*.gz
+    - name: Release
+      uses: softprops/action-gh-release@v1                         # https://github.com/softprops/action-gh-release
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      with:
+        prerelease: true
+        files: |
+          target/${{ github.event.repository.name }}.*.gz
