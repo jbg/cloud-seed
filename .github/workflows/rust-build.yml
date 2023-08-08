@@ -1,13 +1,8 @@
 name: Rust
 on:
   push:
-    branches: [ "develop", "github" ]
-#  pull_request:
-#    branches: [ "develop", "github" ]
-#on:
-#  push:
-#    tags:
-#    - 'v*'
+    tags:
+    - 'v*'
 
 env:
   CARGO_TERM_COLOR: always
@@ -23,8 +18,6 @@ jobs:
           - x86_64-unknown-linux-gnu
     steps:
     - uses: actions/checkout@v3
-    - name: echo variables
-      run: echo ${{ matrix.target }}/release/${{ github.event.repository.name }}
     - name: Install rust
       uses: actions-rs/toolchain@v1
       with:
