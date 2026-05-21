@@ -17,5 +17,5 @@ pub mod vultr;
 
 #[async_trait::async_trait]
 pub trait Source: std::fmt::Debug {
-  async fn try_fetch(&self) -> anyhow::Result<Option<String>>;
+    async fn try_fetch(&self) -> anyhow::Result<Option<String>>;
 }

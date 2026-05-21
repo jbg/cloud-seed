@@ -1,6 +1,6 @@
 [package]
 name = "cloud-seed"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Jasper Hugo <jasper@jasperhugo.com>"]
 edition = "2021"
 description = "Fetch user-data from a cloud provider and write files described within to the filesystem"
@@ -9,16 +9,17 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 anyhow = { version = "1", default-features = false, features = ["std"] }
-async-compression = { version = "0.3", default-features = false, features = ["tokio", "gzip"]}
+async-compression = { version = "0.4", default-features = false, features = ["tokio", "gzip"]}
 async-trait = { version = "0.1", default-features = false }
-aws-config = { optional = true, version = "0.55", default-features = false, features = ["client-hyper", "rustls", "rt-tokio"] }
-base64 = { version = "0.21", default-features = false, features = ["std"] }
+aws-config = { optional = true, version = "1", default-features = false, features = ["rt-tokio"] }
+base64 = { version = "0.22", default-features = false, features = ["std"] }
 flate2 = { optional = true, version = "1", default-features = false, features = ["rust_backend"] }
 futures-util = { version = "0.3", default-features = false, features = ["std"] }
-hostname = { version = "0.3", default-features = false, features = ["set"] }
-hyper = { optional = true, version = "0.14", default-features = false, features = ["client", "http1", "tcp", "stream"] }
-nix = { version = "0.26", default-features = false, features = ["fs", "user"] }
-once_cell = { version = "1", default-features = false, features = ["std"] }
+hostname = { version = "0.4", default-features = false, features = ["set"] }
+http-body-util = { optional = true, version = "0.1", default-features = false }
+hyper = { optional = true, version = "1", default-features = false }
+hyper-util = { optional = true, version = "0.1", default-features = false, features = ["client", "client-legacy", "http1", "tokio"] }
+nix = { version = "0.31", default-features = false, features = ["fs", "user"] }
 serde = { version = "1", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1", default-features = false, features = ["std"] }
 serde_yaml = { version = "0.9", default-features = false }
@@ -37,9 +38,9 @@ default = [
   "source-oracle",
   "source-vultr",
 ]
-helper-http = ["hyper", "flate2"]
+helper-http = ["dep:flate2", "dep:http-body-util", "dep:hyper", "dep:hyper-util"]
 source-alibaba = ["helper-http"]
-source-amazon = ["aws-config"]
+source-amazon = ["dep:aws-config"]
 source-exoscale = ["helper-http"]
 source-google = ["helper-http"]
 source-openstack = ["helper-http"]
